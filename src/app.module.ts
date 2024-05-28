@@ -1,8 +1,9 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { HealthModule } from 'src/modules/health/health.module';
 import { ConfigModule } from '@nestjs/config';
+import { HttpLogginInterceptor } from 'src/common/interceptors/http-loggin.interceptor';
 
 @Module({
     imports: [
@@ -15,4 +16,8 @@ import { ConfigModule } from '@nestjs/config';
     controllers: [AppController],
     providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+    configure(consumer: MiddlewareConsumer) {
+        consumer.apply(HttpLogginInterceptor).exclude({ path: 'metrics', method: RequestMethod.GET }, { path: 'health', method: RequestMethod.GET }).forRoutes('*');
+    }
+}

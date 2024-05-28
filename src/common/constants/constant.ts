@@ -5,6 +5,9 @@ const configService = new ConfigService();
 export const PORT = parseInt(configService.get<string>('PORT'), 10);
 
 export class Constant {
+    // ENCRYPTATION OPTIONS
+    static readonly HASH_SALT = parseInt(configService.get('HASH_SALT'), 10);
+
     //SWAGGER OPTIONS
     static readonly SWAGGER_API_ROOT = configService.get<string>('SWAGGER_API_ROOT');
     static readonly SWAGGER_API_NAME = configService.get<string>('SWAGGER_API_NAME');
@@ -16,4 +19,7 @@ export class Constant {
 
     //LOGGER OPTIONS
     static readonly LOG_FOLDER = configService.get<string>('LOG_FOLDER');
+
+    // TIMEZONE PROPERTIES
+    static readonly TZ = configService.get<string>('TZ');
 }

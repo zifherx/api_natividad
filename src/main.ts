@@ -1,8 +1,9 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app/app.module';
+import { AppModule } from './app.module';
 import { Logger } from '@nestjs/common';
 import { Swagger } from './common/config/swagger/swagger';
 import { PORT } from './common/constants/constant';
+import helmet from 'helmet';
 
 async function API_NATIVIDAD() {
     const app = await NestFactory.create(AppModule);
@@ -10,6 +11,8 @@ async function API_NATIVIDAD() {
 
     const port = PORT || 5000;
 
+    app.setGlobalPrefix('api/v1');
+    app.use(helmet());
     new Swagger(app);
 
     await app.listen(port);
