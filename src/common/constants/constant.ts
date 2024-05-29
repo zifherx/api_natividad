@@ -2,7 +2,16 @@ import { ConfigService } from '@nestjs/config';
 
 const configService = new ConfigService();
 
+// SERVER PARAMS
+export const NODE_ENV = configService.get<string>('NODE_ENV');
 export const PORT = parseInt(configService.get<string>('PORT'), 10);
+
+// DATABASE PROPERTIES
+export const MYSQL_HOST = configService.get<string>('MYSQL_HOST');
+export const MYSQL_PORT = parseInt(configService.get<string>('MYSQL_PORT'), 10);
+export const MYSQL_DATABASE = configService.get<string>('MYSQL_DATABASE');
+export const MYSQL_USERNAME = configService.get<string>('MYSQL_USERNAME');
+export const MYSQL_PASSWORD = configService.get<string>('MYSQL_PASSWORD');
 
 export class Constant {
     // ENCRYPTATION OPTIONS

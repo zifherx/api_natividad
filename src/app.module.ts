@@ -1,9 +1,10 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { HealthModule } from 'src/modules/health/health.module';
+import { HealthModule } from 'src/module/health/health.module';
 import { ConfigModule } from '@nestjs/config';
 import { HttpLogginInterceptor } from 'src/common/interceptors/http-loggin.interceptor';
+import { DatabaseModule } from './module/database/database.module';
 
 @Module({
     imports: [
@@ -12,6 +13,7 @@ import { HttpLogginInterceptor } from 'src/common/interceptors/http-loggin.inter
             isGlobal: true,
         }),
         HealthModule,
+        DatabaseModule,
     ],
     controllers: [AppController],
     providers: [AppService],
