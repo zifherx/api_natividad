@@ -5,6 +5,7 @@ import { HealthModule } from 'src/module/health/health.module';
 import { ConfigModule } from '@nestjs/config';
 import { HttpLogginInterceptor } from 'src/common/interceptors/http-loggin.interceptor';
 import { DatabaseModule } from './module/database/database.module';
+import { UsersModule } from './module/users/users.module';
 
 @Module({
     imports: [
@@ -14,6 +15,7 @@ import { DatabaseModule } from './module/database/database.module';
         }),
         HealthModule,
         DatabaseModule,
+        UsersModule,
     ],
     controllers: [AppController],
     providers: [AppService],
