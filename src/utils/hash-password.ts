@@ -1,8 +1,8 @@
 import * as bcrypt from 'bcryptjs';
-import { Constant } from '../constants/constant';
+import { HASH_SALT } from 'src/constants/constant';
 
 const encryptPassword = async (password: string): Promise<string> => {
-    const salt = await bcrypt.genSalt(Constant.HASH_SALT);
+    const salt = await bcrypt.genSalt(HASH_SALT);
     return await bcrypt.hash(password, salt);
 };
 

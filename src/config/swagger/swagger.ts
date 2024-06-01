@@ -1,9 +1,8 @@
-import { INestApplication, Logger } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
-import { Constant } from 'src/common/constants/constant';
+import { SWAGGER_API_CURRENT_VERSION, SWAGGER_API_DESCRIPTION, SWAGGER_API_NAME, SWAGGER_API_ROOT } from 'src/constants/constant';
 
 export class Swagger {
-    private readonly logger = new Logger(Swagger.name);
     private config: any;
     private document: OpenAPIObject;
 
@@ -14,12 +13,12 @@ export class Swagger {
 
     createSwagger(app: INestApplication): void {
         this.config = new DocumentBuilder();
-        this.config.setTitle(Constant.SWAGGER_API_NAME).setDescription(Constant.SWAGGER_API_DESCRIPTION).setVersion(Constant.SWAGGER_API_CURRENT_VERSION).build();
+        this.config.setTitle(SWAGGER_API_NAME).setDescription(SWAGGER_API_DESCRIPTION).setVersion(SWAGGER_API_CURRENT_VERSION).build();
 
         this.document = SwaggerModule.createDocument(app, this.config);
     }
 
     initializeSwagger(app: INestApplication): void {
-        SwaggerModule.setup(Constant.SWAGGER_API_ROOT, app, this.document);
+        SwaggerModule.setup(SWAGGER_API_ROOT, app, this.document);
     }
 }

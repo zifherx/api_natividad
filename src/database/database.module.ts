@@ -3,6 +3,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { dataSourceConfig } from './database.provider';
 
 @Module({
-    imports: [TypeOrmModule.forRoot({ ...dataSourceConfig })],
+    imports: [TypeOrmModule.forRootAsync({ useFactory: () => dataSourceConfig })],
 })
 export class DatabaseModule {}

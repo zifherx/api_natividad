@@ -1,6 +1,6 @@
-import { DataSourceOptions } from 'typeorm';
+import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 
-export const dataSourceConfig: DataSourceOptions = {
+export const dataSourceConfig: TypeOrmModuleOptions = {
     type: 'mysql',
     host: 'localhost',
     port: 3307,
@@ -8,6 +8,8 @@ export const dataSourceConfig: DataSourceOptions = {
     username: 'zifher',
     password: 'secret1234',
     entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+    migrations: [__dirname + '/../**/migrations/*{.ts,.js}'],
+    autoLoadEntities: true,
     synchronize: false,
     logging: true,
     logger: 'file',

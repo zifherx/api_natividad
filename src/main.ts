@@ -1,8 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
-import { Swagger } from './common/config/swagger/swagger';
-import { PORT } from './common/constants/constant';
+import { Swagger } from './config/swagger/swagger';
+import { PORT } from './constants/constant';
 import helmet from 'helmet';
 
 async function API_NATIVIDAD() {
