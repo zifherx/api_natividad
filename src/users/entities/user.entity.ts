@@ -1,36 +1,53 @@
 import { BaseEntity } from 'src/database/entity/baseEntity';
 import { Column, Entity } from 'typeorm';
 import { IUser } from '../interfaces/user.interface';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity({ name: 'users' })
 export class UserEntity extends BaseEntity implements IUser {
-    @Column()
+    @Column('varchar', { length: 30 })
     firstName: string;
 
-    @Column()
+    @Column('varchar', { length: 30 })
     lastName: string;
 
-    @Column()
+    @Column({ nullable: true, default: null, length: 9 })
     cellphone: string;
 
     @Column()
     typeDocument: string;
 
-    @Column({ unique: true })
+    @Column({ length: 15, unique: true })
     document: string;
 
-    @Column({ unique: true })
+    @ApiProperty({
+        example: 'test@test.es',
+        uniqueItems: true,
+        description: 'Cuenta de correo',
+    })
+    @Column({ length: 50, unique: true })
     email: string;
 
-    @Column({ unique: true })
+    @ApiProperty({
+        description: 'Nombre de usuario',
+        example: 'abc',
+        minLength: 3,
+    })
+    @Column({ length: 50, unique: true })
     username: string;
 
-    @Column()
+    @ApiProperty({
+        description: 'Contraseña de la cuenta.',
+        minLength: 8,
+        maxLength: 50,
+    })
+    @Column({ length: 65, select: false })
     password: string;
 
-    @Column()
+    @Column({ nullable: true, default: null })
     avatar: string;
 
+    @ApiProperty()
     @Column('boolean', { default: 1 })
     status: boolean;
 

@@ -38,4 +38,13 @@ export class UsersService {
             return { success: false, error: err.message };
         }
     }
+
+    public async findAll(): Promise<CoreOutput> {
+        try {
+            const obj = await this.userRepository.find({ where: { isDeleted: false } });
+            if (obj) return { success: true };
+        } catch (err) {
+            return { success: false, error: err.message };
+        }
+    }
 }

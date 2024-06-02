@@ -9,4 +9,5 @@ export interface IUser {
     password: string;
     avatar: string;
     status: boolean;
+    isDeleted: boolean;
 }
