@@ -1,9 +1,10 @@
 import { BaseEntity } from 'src/database/entity/baseEntity';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 import { IUser } from '../interfaces/user.interface';
 import { ApiProperty } from '@nestjs/swagger';
+import { TypeDocumentEntity } from '../../type-document/entities/typeDocument.entity';
 
-@Entity({ name: 'users' })
+@Entity({ name: 'Tbl_Users' })
 export class UserEntity extends BaseEntity implements IUser {
     @Column('varchar', { length: 30 })
     firstName: string;
@@ -14,8 +15,9 @@ export class UserEntity extends BaseEntity implements IUser {
     @Column({ nullable: true, default: null, length: 9 })
     cellphone: string;
 
-    @Column()
-    typeDocument: string;
+    @OneToOne(() => TypeDocumentEntity, (tdocument) => tdocument.id)
+    @JoinColumn({ name: 'typeDocumentId' })
+    typeDocumentId: TypeDocumentEntity;
 
     @Column({ length: 15, unique: true })
     document: string;
@@ -49,7 +51,7 @@ export class UserEntity extends BaseEntity implements IUser {
 
     @ApiProperty()
     @Column('boolean', { default: 1 })
-    status: boolean;
+    isActive: boolean;
 
     @Column('boolean', { default: 0 })
     isDeleted: boolean;

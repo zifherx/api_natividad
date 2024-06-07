@@ -5,7 +5,9 @@ import { HealthModule } from 'src/health/health.module';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './database/database.module';
 import { UsersModule } from './users/users.module';
-import { HttpLogginInterceptor } from './interceptors/http-loggin.interceptor';
+import { HttpLogginInterceptor } from './config/interceptors/http-loggin.interceptor';
+import { TypeDocumentModule } from './type-document/type-document.module';
+import { RolesModule } from './roles/roles.module';
 
 @Module({
     imports: [
@@ -16,6 +18,8 @@ import { HttpLogginInterceptor } from './interceptors/http-loggin.interceptor';
         HealthModule,
         DatabaseModule,
         UsersModule,
+        TypeDocumentModule,
+        RolesModule,
     ],
     controllers: [AppController],
     providers: [AppService],

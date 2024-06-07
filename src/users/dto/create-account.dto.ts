@@ -1,4 +1,5 @@
 import { IsEmail, IsNotEmpty, IsOptional, IsString, MinLength } from 'class-validator';
+import { TypeDocumentEntity } from 'src/type-document/entities/typeDocument.entity';
 
 export class CreateUserInputDto {
     @IsString()
@@ -10,8 +11,7 @@ export class CreateUserInputDto {
     lastName: string;
 
     @IsString()
-    @IsNotEmpty()
-    typeDocument: string;
+    typeDocumentId: TypeDocumentEntity;
 
     @IsString()
     @MinLength(8)

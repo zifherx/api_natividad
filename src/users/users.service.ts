@@ -1,10 +1,11 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserInputDto } from './dto/create-account.dto';
 import { CoreOutput } from '../database/dto/output.dto';
 import { encryptPassword } from 'src/utils/hash-password';
+import { TypeDocumentEntity } from '../type-document/entities/typeDocument.entity';
 
 @Injectable()
 export class UsersService {
@@ -13,36 +14,28 @@ export class UsersService {
     constructor(
         @InjectRepository(UserEntity)
         private readonly userRepository: Repository<UserEntity>,
+        @InjectRepository(TypeDocumentEntity)
+        private readonly typeDocumentRepository: Repository<TypeDocumentEntity>,
     ) {}
 
-    public async create(createUserInputDto: CreateUserInputDto): Promise<CoreOutput> {
+    public async create(createUserInputDto: CreateUserInputDto) {
         try {
-            const existUser = await this.userRepository.findOne({
-                where: {
-                    email: createUserInputDto.email,
-                    document: createUserInputDto.document,
-                    username: createUserInputDto.username,
-                },
-            });
+            const documentFound = await this.typeDocumentRepository.findOne({ where: { abbreviation: createUserInputDto.typeDocumentId.abbreviation } });
+            if (!documentFound) throw new NotFoundException('Tipo de Documento no encontrado');
 
-            if (existUser) {
-                return { success: false, error: 'Usuario ya existe' };
-            }
-
-            let usuario = createUserInputDto as UserEntity;
-            usuario.password = await encryptPassword(usuario.password);
-            const obj = this.userRepository.create(usuario);
-            await this.userRepository.save(obj);
-            return { success: true };
+            createUserInputDto.typeDocumentId = documentFound;
+            let obj = this.userRepository.create(createUserInputDto);
+            const query = await this.userRepository.save(obj);
+            return query;
         } catch (err) {
-            return { success: false, error: err.message };
+            console.log(err);
         }
     }
 
-    public async findAll(): Promise<CoreOutput> {
+    public async findAll() {
         try {
             const obj = await this.userRepository.find({ where: { isDeleted: false } });
-            if (obj) return { success: true };
+            if (obj) return { success: true, all: obj };
         } catch (err) {
             return { success: false, error: err.message };
         }

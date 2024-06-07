@@ -12,7 +12,7 @@ export class UsersController {
 
     @Post()
     @ApiOperation({ summary: 'Creación de una cuenta de usuario' })
-    async create(@Body() createUserDto: CreateUserInputDto): Promise<CoreOutput> {
+    async create(@Body() createUserDto: CreateUserInputDto) {
         this.logger.log('Creando usuario');
         return this.userService.create(createUserDto);
     }
