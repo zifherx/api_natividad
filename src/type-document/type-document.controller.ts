@@ -19,7 +19,7 @@ export class TypeDocumentController {
 
     @Get()
     async getAll() {
-        this.logger.log(`GetAll: Obteniendo los tipos de documento`);
+        this.logger.log(`GetAll: Listando los tipos de documento`);
         return this.typeDocumentService.getAll();
     }
 

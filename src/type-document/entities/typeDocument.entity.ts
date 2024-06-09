@@ -1,8 +1,8 @@
-import { Column, Entity, OneToOne } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { ITypeDocument } from '../interfaces/typeDocument.interface';
 import { ApiProperty } from '@nestjs/swagger';
-import { UserEntity } from '../../users/entities/user.entity';
 import { BaseEntity } from 'src/database/entity/baseEntity';
+import { UserEntity } from 'src/users/entities/user.entity';
 
 @Entity({ name: 'Tbl_TypeDocument' })
 export class TypeDocumentEntity extends BaseEntity implements ITypeDocument {
@@ -21,6 +21,9 @@ export class TypeDocumentEntity extends BaseEntity implements ITypeDocument {
     @Column('varchar', { length: 20, nullable: false })
     abbreviation: string;
 
+    @Column('numeric', { nullable: false })
+    length: number;
+
     @ApiProperty()
     @Column('boolean', { default: 1 })
     isActive: boolean;
@@ -29,6 +32,6 @@ export class TypeDocumentEntity extends BaseEntity implements ITypeDocument {
     @Column('boolean', { default: 0 })
     isDeleted: boolean;
 
-    @OneToOne(() => UserEntity, (user: UserEntity) => user.typeDocumentId)
-    usuario: UserEntity;
+    @OneToMany(() => UserEntity, (user) => user.typeDocument)
+    user: UserEntity[];
 }

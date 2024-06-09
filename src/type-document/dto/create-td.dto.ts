@@ -1,4 +1,4 @@
-import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateTypeDocumentDto {
     @IsString()
@@ -9,7 +9,11 @@ export class CreateTypeDocumentDto {
     @IsNotEmpty()
     abbreviation: string;
 
-    @IsBoolean()
+    @IsNumber()
     @IsNotEmpty()
+    length: number;
+
+    @IsBoolean()
+    @IsOptional()
     isActive: boolean;
 }

@@ -3,7 +3,7 @@ import { TypeDocumentEntity } from '../../type-document/entities/typeDocument.en
 export interface IUser {
     firstName: string;
     lastName: string;
-    typeDocumentId: TypeDocumentEntity;
+    typeDocument: TypeDocumentEntity;
     document: string;
     cellphone: string;
     email: string;

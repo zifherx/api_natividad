@@ -1,34 +1,38 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Logger } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 
 @Controller('roles')
 export class RolesController {
-  constructor(private readonly rolesService: RolesService) {}
+    private readonly logger: Logger = new Logger(RolesController.name);
 
-  @Post()
-  create(@Body() createRoleDto: CreateRoleDto) {
-    return this.rolesService.create(createRoleDto);
-  }
+    constructor(private readonly rolesService: RolesService) {}
 
-  @Get()
-  findAll() {
-    return this.rolesService.findAll();
-  }
+    @Post()
+    create(@Body() createRoleDto: CreateRoleDto) {
+        this.logger.log(`Create: Creando rol`);
+        return this.rolesService.create(createRoleDto);
+    }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.rolesService.findOne(+id);
-  }
+    @Get()
+    findAll() {
+        this.logger.log(`GetAll: Listando los tipos de documento`);
+        return this.rolesService.findAll();
+    }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDto) {
-    return this.rolesService.update(+id, updateRoleDto);
-  }
+    @Get(':id')
+    findOne(@Param('id') id: string) {
+        return this.rolesService.findOne(id);
+    }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.rolesService.remove(+id);
-  }
+    @Patch(':id')
+    update(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDto) {
+        return this.rolesService.updateById(id, updateRoleDto);
+    }
+
+    @Delete(':id')
+    remove(@Param('id') id: string) {
+        return this.rolesService.removeById(id);
+    }
 }
