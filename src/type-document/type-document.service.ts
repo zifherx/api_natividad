@@ -1,4 +1,4 @@
-import { BadRequestException, HttpException, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TypeDocumentEntity } from './entities/typeDocument.entity';
 import { Repository } from 'typeorm';
@@ -28,7 +28,11 @@ export class TypeDocumentService {
             }
         } catch (err) {
             this.logger.error(`CatchCreate`, { error: err.message });
-            throw new InternalServerErrorException(err.message);
+            if (err.status === HttpStatus.BAD_REQUEST) {
+                throw err;
+            } else {
+                throw new InternalServerErrorException(err.message);
+            }
         }
     }
 
@@ -49,13 +53,19 @@ export class TypeDocumentService {
     public async getAll(): Promise<CoreOutput> {
         try {
             const query = await this.typeDocumentRepository.find();
+            // console.log('T:',typeof(query));
+            // console.log('Q:',query.length);
             if (query.length == 0) throw new BadRequestException(`No existen registros.`);
 
             this.logger.log(`GetAll: Obtención de tipos de documento.`);
             return { success: true, total: query.length, data: query };
         } catch (err) {
-            this.logger.error(`CatchGetAll`, { error: err.message });
-            throw new InternalServerErrorException(err.message);
+            this.logger.error(`CatchGetAll: ${err.message}`);
+            if (err.status === HttpStatus.BAD_REQUEST) {
+                throw err;
+            } else {
+                throw new InternalServerErrorException(err.message);
+            }
         }
     }
 
@@ -67,7 +77,11 @@ export class TypeDocumentService {
             return { success: true, data: query };
         } catch (err) {
             this.logger.error(`CathGetOne`, { error: err.message });
-            throw new InternalServerErrorException(err.message);
+            if (err.status === HttpStatus.BAD_REQUEST) {
+                throw err;
+            } else {
+                throw new InternalServerErrorException(err.message);
+            }
         }
     }
 
@@ -84,7 +98,11 @@ export class TypeDocumentService {
             }
         } catch (err) {
             this.logger.error(`CatchUpdate`, { error: err.message });
-            throw new InternalServerErrorException(err.message);
+            if (err.status === HttpStatus.BAD_REQUEST) {
+                throw err;
+            } else {
+                throw new InternalServerErrorException(err.message);
+            }
         }
     }
 
@@ -101,7 +119,12 @@ export class TypeDocumentService {
             }
         } catch (err) {
             this.logger.error(`CatchDelete`, { error: err.message });
-            throw new InternalServerErrorException(err.message);
+            if(err.status === HttpStatus.BAD_REQUEST){
+                throw err
+            }else{
+                throw new InternalServerErrorException(err.message);
+                
+            }
         }
     }
 }
