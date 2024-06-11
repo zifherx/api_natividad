@@ -1,0 +1,15 @@
+meta {
+  name: All By Param
+  type: http
+  seq: 6
+}
+
+get {
+  url: http://localhost:4000/api/v1/roles/custom/?type=eliminados
+  body: none
+  auth: none
+}
+
+query {
+  type: eliminados
+}

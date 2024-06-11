@@ -30,4 +30,11 @@ export const LOG_FOLDER = configService.get<string>('LOG_FOLDER');
 // TIMEZONE PROPERTIES
 export const TZ = configService.get<string>('TZ');
 
-export class Constant {}
+export class Constant {
+    static readonly MSG_CREATE_EXITOSO = 'creado con éxito.';
+    static readonly MSG_UPDATE_EXITOSO = 'actualizado con éxito.';
+    static readonly MSG_DELETE_EXITOSO = 'eliminado con éxito.';
+    static readonly MSG_FOUNDED_EXITOSO = 'encontrado con éxito.';
+    static readonly MSG_ELIMINADO = 'fue eliminado.';
+    static readonly MSG_NO_EXISTE = 'no existe.';
+}

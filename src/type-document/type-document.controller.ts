@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Logger, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Logger, Param, Patch, Post, Query } from '@nestjs/common';
 import { TypeDocumentService } from './type-document.service';
 import { CreateTypeDocumentDto } from './dto/create-td.dto';
 import { UpdateTypeDocumentDto } from './dto/update-td.dto';
@@ -15,6 +15,12 @@ export class TypeDocumentController {
     async create(@Body() createTypeDocumentDto: CreateTypeDocumentDto) {
         this.logger.log(`Create: Creando tipo de documento`);
         return this.typeDocumentService.create(createTypeDocumentDto);
+    }
+
+    @Get('custom')
+    async getAllParam(@Query('type') type: string) {
+        this.logger.log(`GetAllByParam: Listando los tipos de documento ${type}`);
+        return this.typeDocumentService.getAllParam(type);
     }
 
     @Get()

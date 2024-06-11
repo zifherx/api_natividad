@@ -1,0 +1,17 @@
+meta {
+  name: Update By Id
+  type: http
+  seq: 4
+}
+
+patch {
+  url: http://localhost:4000/api/v1/roles/c2151ddb-4544-4a78-8af5-2bdce83d3263
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "isActive" : true
+  }
+}

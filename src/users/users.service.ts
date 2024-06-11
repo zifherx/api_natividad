@@ -7,6 +7,7 @@ import { CoreOutput } from '../database/dto/output.dto';
 import { encryptPassword } from 'src/utils/hash-password';
 import { TypeDocumentEntity } from '../type-document/entities/typeDocument.entity';
 import { RoleEntity } from 'src/roles/entities/role.entity';
+import { Constant } from 'src/constants/constant';
 
 @Injectable()
 export class UsersService {
@@ -23,10 +24,10 @@ export class UsersService {
 
     public async create(createUserInputDto: CreateUserInputDto): Promise<CoreOutput> {
         const documentFound = await this.typeDocumentRepository.findOne({ where: { abbreviation: createUserInputDto.typeDocument } });
-        if (!documentFound) throw new BadRequestException('Tipo de Documento no encontrado');
+        if (!documentFound) throw new BadRequestException(`Tipo de Documento ${Constant.MSG_NO_EXISTE}`);
 
         const roleFound = await this.roleRepository.findOne({ where: { name: createUserInputDto.role } });
-        if (!roleFound) throw new BadRequestException('Rol no encontrado');
+        if (!roleFound) throw new BadRequestException(`Rol ${Constant.MSG_NO_EXISTE}`);
 
         try {
             let newUser = {
@@ -44,11 +45,11 @@ export class UsersService {
 
             const query = await this.userRepository.save(obj);
             if (query) {
-                this.logger.log(`Create: Usuario creado con éxito.`);
-                return { success: true, message: `Usuario creado con éxito.` };
+                this.logger.log(`Create: Usuario ${Constant.MSG_CREATE_EXITOSO}`);
+                return { success: true, message: `Usuario ${Constant.MSG_CREATE_EXITOSO}` };
             }
         } catch (err) {
-            this.logger.error(`CatchCreate`, { error: err.message });
+            this.logger.error(`CatchCreate: ${err.message}`);
             throw new InternalServerErrorException(err.message);
         }
     }
@@ -80,7 +81,7 @@ export class UsersService {
             this.logger.log(`GetAll: Listado de usuarios.`);
             return { success: true, total: query.length, data: query };
         } catch (err) {
-            this.logger.error(`CatchGetAll`, { error: err.message });
+            this.logger.error(`CatchGetAll: ${err.message}`);
             throw new InternalServerErrorException(err.message);
         }
     }
