@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Logger, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Logger, Param, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { CreateUserInputDto } from './dto/create-account.dto';
@@ -19,7 +19,21 @@ export class UsersController {
     @Get()
     @ApiOperation({ summary: 'Listar todos los usuarios' })
     async findAll() {
-        this.logger.log('Listando los usuarios');
+        this.logger.log(`GetAll: Listando los usuarios`);
         return this.userService.getAll();
+    }
+
+    @Get(':id')
+    @ApiOperation({ summary: 'Obtener un usuario por id' })
+    async getOne(@Param('id') id: string) {
+        this.logger.log(`GetOneById: Obteniendo el usuario ${id}`);
+        return this.userService.findOneById(id);
+    }
+
+    @Delete(':id')
+    @ApiOperation({ summary: 'Eliminar un usuario por id' })
+    async deleteOne(@Param('id') id: string) {
+        this.logger.log(`DeleteOneById: Eliminando el usuario ${id}`);
+        return this.userService.deleteById(id);
     }
 }

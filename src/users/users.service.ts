@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from './entities/user.entity';
 import { Repository } from 'typeorm';
@@ -8,6 +8,7 @@ import { encryptPassword } from 'src/utils/hash-password';
 import { TypeDocumentEntity } from '../type-document/entities/typeDocument.entity';
 import { RoleEntity } from 'src/roles/entities/role.entity';
 import { Constant } from 'src/constants/constant';
+import { UpdateUserInputDto } from './dto/update-account.dto';
 
 @Injectable()
 export class UsersService {
@@ -28,6 +29,15 @@ export class UsersService {
 
         const roleFound = await this.roleRepository.findOne({ where: { name: createUserInputDto.role } });
         if (!roleFound) throw new BadRequestException(`Rol ${Constant.MSG_NO_EXISTE}`);
+
+        const userDocumentExist = await this.userRepository.findOne({ where: { document: createUserInputDto.document } });
+        if (userDocumentExist != null) throw new BadRequestException(`Documento '${createUserInputDto.document}' ya está registrado.'`);
+
+        const userEmailExist = await this.userRepository.findOne({ where: { email: createUserInputDto.email } });
+        if (userEmailExist != null) throw new BadRequestException(`Email '${createUserInputDto.email}' ya está registrado.'`);
+
+        const usernameExist = await this.userRepository.findOne({ where: { username: createUserInputDto.username } });
+        if (usernameExist != null) throw new BadRequestException(`Nombre del usuario '${createUserInputDto.username}' ya está registrado.'`);
 
         try {
             let newUser = {
@@ -50,7 +60,11 @@ export class UsersService {
             }
         } catch (err) {
             this.logger.error(`CatchCreate: ${err.message}`);
-            throw new InternalServerErrorException(err.message);
+            if (err.status === HttpStatus.BAD_REQUEST) {
+                throw err;
+            } else {
+                throw new InternalServerErrorException(err.message);
+            }
         }
     }
 
@@ -82,7 +96,87 @@ export class UsersService {
             return { success: true, total: query.length, data: query };
         } catch (err) {
             this.logger.error(`CatchGetAll: ${err.message}`);
-            throw new InternalServerErrorException(err.message);
+            if (err.status === HttpStatus.BAD_REQUEST) {
+                throw err;
+            } else {
+                throw new InternalServerErrorException(err.message);
+            }
+        }
+    }
+
+    public async findOneById(id: string): Promise<CoreOutput> {
+        try {
+            const userDeleted = await this.userRepository.query(`SELECT COUNT(1) as count FROM Tbl_Users WHERE id = '${id}' AND isDeleted = ${true}`);
+            if (userDeleted[0].count == 1) throw new BadRequestException(`Usuario ${Constant.MSG_ELIMINADO}`);
+
+            const query = await this.userRepository.findOneBy({ id });
+            if (query == null) throw new BadRequestException(`Usuario ${Constant.MSG_NO_EXISTE}`);
+
+            this.logger.log(`GetOneById: Usuario ${Constant.MSG_FOUNDED_EXITOSO}`);
+            return { success: true, data: query };
+        } catch (err) {
+            this.logger.error(`CatchGetOneById: ${err.message}`);
+            if (err.status === HttpStatus.BAD_REQUEST) {
+                throw err;
+            } else {
+                throw new InternalServerErrorException(err.message);
+            }
+        }
+    }
+
+    public async updateById(id: string, updateUserInputDto: UpdateUserInputDto): Promise<CoreOutput> {
+        try {
+            const userDeleted = await this.userRepository.query(`SELECT COUNT(1) AS count FROM Tbl_Users WHERE id = '${id}' AND isDeleted = ${true}`);
+            if (userDeleted[0].count == 1) throw new BadRequestException(`Usuario ${Constant.MSG_ELIMINADO} el `);
+
+            const userExist = await this.userRepository.findOneBy({ id });
+            if (userExist == null) throw new BadRequestException(`Usuario ${Constant.MSG_NO_EXISTE}`);
+
+            let updateUser = {
+                firstName: updateUserInputDto.firstName,
+                lastName: updateUserInputDto.lastName,
+                email: updateUserInputDto.email,
+                cellphone: updateUserInputDto.cellphone,
+                document: updateUserInputDto.document,
+                username: updateUserInputDto.username,
+                typeDocument: null,
+            } as UserEntity;
+
+            const query = await this.userRepository.update(id, updateUser);
+            if (query.affected == 1) {
+                this.logger.log(`UpdateById: Tipo de documento ${Constant.MSG_UPDATE_EXITOSO}`);
+                return { success: true, message: `Tipo de documento ${Constant.MSG_UPDATE_EXITOSO}` };
+            }
+        } catch (err) {
+            this.logger.error(`CatchUpdate: ${err.message}`);
+            if (err.status === HttpStatus.BAD_REQUEST) {
+                throw err;
+            } else {
+                throw new InternalServerErrorException(err.message);
+            }
+        }
+    }
+
+    public async deleteById(id: string): Promise<CoreOutput> {
+        try {
+            const userDeleted = await this.userRepository.query(`SELECT COUNT(1) AS count FROM Tbl_Users WHERE id = '${id}' AND isDeleted = ${true}`);
+            if (userDeleted[0].count == 1) throw new BadRequestException(`Usuario ${Constant.MSG_ELIMINADO} el `);
+
+            const userExist = await this.userRepository.findOneBy({ id });
+            if (userExist == null) throw new BadRequestException(`Usuario ${Constant.MSG_NO_EXISTE}`);
+
+            const query = await this.userRepository.update(id, { isDeleted: true, deletedAt: new Date() });
+            if (query.affected == 1) {
+                this.logger.log(`DeleteById: Usuario ${Constant.MSG_DELETE_EXITOSO}`);
+                return { success: true, message: `Usuario ${Constant.MSG_DELETE_EXITOSO}` };
+            }
+        } catch (err) {
+            this.logger.error(`CatchDelete: ${err.message}`);
+            if (err.status === HttpStatus.BAD_REQUEST) {
+                throw err;
+            } else {
+                throw new InternalServerErrorException(err.message);
+            }
         }
     }
 }
