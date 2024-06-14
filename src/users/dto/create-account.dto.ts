@@ -34,4 +34,10 @@ export class CreateUserInputDto {
     @IsString()
     @IsNotEmpty({ message: `Oops al parecer no has ingresado dato en este campo.` })
     role: string;
+
+    @IsOptional()
+    isActive: boolean;
+
+    @IsOptional()
+    avatar: string;
 }

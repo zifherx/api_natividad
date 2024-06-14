@@ -132,21 +132,25 @@ export class UsersService {
             const userExist = await this.userRepository.findOneBy({ id });
             if (userExist == null) throw new BadRequestException(`Usuario ${Constant.MSG_NO_EXISTE}`);
 
+            const documentFound = await this.typeDocumentRepository.findOne({ where: { abbreviation: updateUserInputDto.typeDocument } });
+            if (!documentFound) throw new BadRequestException(`Tipo de Documento ${Constant.MSG_NO_EXISTE}`);
+
+            const roleFound = await this.roleRepository.findOne({ where: { name: updateUserInputDto.role } });
+            if (!roleFound) throw new BadRequestException(`Rol ${Constant.MSG_NO_EXISTE}`);
+
             let updateUser = {
-                firstName: updateUserInputDto.firstName,
-                lastName: updateUserInputDto.lastName,
-                email: updateUserInputDto.email,
-                cellphone: updateUserInputDto.cellphone,
-                document: updateUserInputDto.document,
-                username: updateUserInputDto.username,
-                typeDocument: null,
+                ...updateUserInputDto,
+                typeDocument: documentFound,
+                role: roleFound,
             } as UserEntity;
 
             const query = await this.userRepository.update(id, updateUser);
+            console.log('Q:', query);
             if (query.affected == 1) {
                 this.logger.log(`UpdateById: Tipo de documento ${Constant.MSG_UPDATE_EXITOSO}`);
                 return { success: true, message: `Tipo de documento ${Constant.MSG_UPDATE_EXITOSO}` };
             }
+            // return { success: false, message: `Perro Puto` };
         } catch (err) {
             this.logger.error(`CatchUpdate: ${err.message}`);
             if (err.status === HttpStatus.BAD_REQUEST) {

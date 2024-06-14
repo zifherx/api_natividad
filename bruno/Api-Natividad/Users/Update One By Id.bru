@@ -1,0 +1,19 @@
+meta {
+  name: Update One By Id
+  type: http
+  seq: 5
+}
+
+patch {
+  url: http://localhost:4000/api/v1/users/98f81567-74dc-4a3c-b729-704bd05c7d0a
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "document" : "70365832",
+    "typeDocument" : "DNI",
+    "role" : "Administrador"
+  }
+}

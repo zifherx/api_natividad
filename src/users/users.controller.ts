@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Get, Logger, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Logger, Param, Patch, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { CreateUserInputDto } from './dto/create-account.dto';
+import { UpdateUserInputDto } from './dto/update-account.dto';
 
 @ApiTags('Usuarios')
 @Controller('users')
@@ -28,6 +29,13 @@ export class UsersController {
     async getOne(@Param('id') id: string) {
         this.logger.log(`GetOneById: Obteniendo el usuario ${id}`);
         return this.userService.findOneById(id);
+    }
+
+    @Patch(':id')
+    @ApiOperation({ summary: 'Actualizar usuario por id' })
+    async updateOne(@Param('id') id: string, @Body() updateUserDto: UpdateUserInputDto) {
+        this.logger.log(`UpdateOneById: Actualizando el usuario ${id}`);
+        return this.userService.updateById(id, updateUserDto);
     }
 
     @Delete(':id')
