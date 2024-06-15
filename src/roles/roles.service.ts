@@ -123,7 +123,6 @@ export class RolesService {
         let roleFound: RoleEntity;
         try {
             roleFound = await this.roleRepository.findOne({ where: { name } });
-            console.log(roleFound);
             if (roleFound !== null) throw new BadRequestException(`Rol '${name}' ya existe.`);
             this.logger.log(`Rol ${name} ${Constant.MSG_FOUNDED_EXITOSO}`);
             return roleFound;

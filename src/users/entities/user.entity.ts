@@ -19,7 +19,7 @@ export class UserEntity extends BaseEntity implements IUser {
     @ManyToOne(() => TypeDocumentEntity, (tdocument) => tdocument.id, { onUpdate: 'CASCADE', onDelete: 'CASCADE' })
     typeDocument: TypeDocumentEntity;
 
-    @Column({ length: 15, unique: true })
+    @Column({ length: 15 })
     document: string;
 
     @ApiProperty({
@@ -49,7 +49,7 @@ export class UserEntity extends BaseEntity implements IUser {
     @Column({ nullable: true, default: null })
     avatar: string;
 
-    @ManyToOne(() => RoleEntity, (role) => role.id)
+    @ManyToOne(() => RoleEntity, (role) => role.id, { onUpdate: 'CASCADE', onDelete: 'CASCADE' })
     role: RoleEntity;
 
     @ApiProperty()
