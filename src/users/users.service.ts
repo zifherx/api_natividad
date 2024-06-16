@@ -188,7 +188,7 @@ export class UsersService {
             userFound = await this.userRepository.findOne({ where: { document } });
             if (userFound !== null) throw new BadRequestException(`Usuario con el documento '${document}' ya se encuentra registrado`);
 
-            this.logger.log(`Usuario con el documento ${document} ${Constant.MSG_FOUNDED_EXITOSO}`);
+            this.logger.log(`Usuario con el documento '${document}' ${Constant.MSG_FOUNDED_EXITOSO}`);
             return userFound;
         } catch (err) {
             this.logger.error(`CatchFindByDocument: ${err.message}`);
@@ -206,7 +206,7 @@ export class UsersService {
             userFound = await this.userRepository.findOne({ where: { email } });
             if (userFound !== null) throw new BadRequestException(`Usuario con el email '${email}' ya se encuentra registrado`);
 
-            this.logger.log(`Usuario con el email ${email} ${Constant.MSG_FOUNDED_EXITOSO}`);
+            this.logger.log(`Usuario con el email '${email}' ${Constant.MSG_FOUNDED_EXITOSO}`);
             return userFound;
         } catch (err) {
             this.logger.error(`CatchFindByEmail: ${err.message}`);
@@ -224,7 +224,7 @@ export class UsersService {
             userFound = await this.userRepository.findOne({ where: { username } });
             if (userFound !== null) throw new BadRequestException(`Usuario con el nickname '${username}' ya se encuentra registrado`);
 
-            this.logger.log(`Usuario con el nickname ${username} ${Constant.MSG_FOUNDED_EXITOSO}`);
+            this.logger.log(`Usuario con el nickname '${username}' ${Constant.MSG_FOUNDED_EXITOSO}`);
             return userFound;
         } catch (err) {
             this.logger.error(`CatchFindByUsername: ${err.message}`);
